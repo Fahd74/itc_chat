@@ -1,0 +1,1 @@
+export 'chat/ui/screens/chat_screen.dart';
