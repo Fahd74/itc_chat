@@ -13,6 +13,7 @@ class AppTheme {
       primaryColor: AppColors.primary,
 
       colorScheme: const ColorScheme.light(
+        primaryContainer: AppColors.genoa550,
         secondary: AppColors.primaryDark,
         surface: AppColors.lightSurface,
         error: AppColors.error,
@@ -91,6 +92,7 @@ class AppTheme {
       primaryColor: AppColors.primary,
 
       colorScheme: const ColorScheme.dark(
+        primaryContainer: AppColors.woodsmoke800,
         secondary: AppColors.primaryDark,
         surface: AppColors.darkSurface,
         error: AppColors.error,

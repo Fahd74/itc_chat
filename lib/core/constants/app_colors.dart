@@ -15,6 +15,7 @@ class AppColors {
   static const Color genoa800 = Color(0xFF095B56);
   static const Color genoa700 = Color(0xFF0F766E);
   static const Color genoa600 = Color(0xFF19A498);
+  static const Color genoa550 = Color(0xFF92BEBA);
   static const Color genoa500 = Color(0xFF21C8B9);
   static const Color greenDark = Color(0xFF007F6D);
 
@@ -29,7 +30,6 @@ class AppColors {
   static const Color woodsmoke800 = Color(0xFF222222);
   static const Color woodsmoke900 = Color(0xFF121212);
   static const Color woodsmoke950 = Color(0xFF050505);
-
   // ==========================================
   // Light Mode Mapping
   // ==========================================
@@ -55,6 +55,6 @@ class AppColors {
   // Utility Colors
   // ==========================================
   static const Color error = Color(0xFFD32F2F);
-  static const Color success = Color(0xFF00A991);
+  static const Color success = Color(0xFF14AE5C);
   static const Color transparent = Colors.transparent;
 }
