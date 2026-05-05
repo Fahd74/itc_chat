@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:itc_chat/core/config/app_theme.dart';
-import 'package:itc_chat/features/chat/ui/cubit/cubit.dart';
-import 'package:itc_chat/features/screens.dart';
+import 'package:itc_chat/features/chat/ui/screens/chat_screen.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await dotenv.load(fileName: ".env");
   runApp(const MyApp());
 }
 
@@ -18,7 +19,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: AppTheme.lightTheme,
       darkTheme: AppTheme.darkTheme,
-      home: BlocProvider(create: (context) => ChatCubit(), child: ChatScreen()),
+      home: const ChatScreen(),
     );
   }
 }

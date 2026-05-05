@@ -1,4 +1,4 @@
-import 'package:itc_chat/features/chat/data/models/chat_message.dart';
+import 'package:itc_chat/features/chat/domain/entities/chat_message.dart';
 
 abstract class ChatState {}
 
