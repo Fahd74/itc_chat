@@ -2,7 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:itc_chat/core/widgets/widgets.dart';
 
 class ChatInputBar extends StatelessWidget {
-  const ChatInputBar({super.key});
+  final TextEditingController controller;
+  final VoidCallback onSendPressed;
+  final VoidCallback onAddAttachmentPressed;
+
+  const ChatInputBar({
+    super.key,
+    required this.controller,
+    required this.onSendPressed,
+    required this.onAddAttachmentPressed,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -11,7 +20,7 @@ class ChatInputBar extends StatelessWidget {
       child: Row(
         children: [
           GestureDetector(
-            onTap: () {},
+            onTap: onAddAttachmentPressed,
             child: GlassEffect(
               borderRadius: BorderRadiusGeometry.circular(30),
               child: CircleAvatar(
@@ -26,6 +35,7 @@ class ChatInputBar extends StatelessWidget {
             child: GlassEffect(
               borderRadius: BorderRadius.circular(20),
               child: TextField(
+                controller: controller,
                 style: TextStyle(color: Colors.white),
                 minLines: 1,
                 maxLines: 4,
@@ -37,9 +47,12 @@ class ChatInputBar extends StatelessWidget {
                   ),
                   border: InputBorder.none,
                   contentPadding: EdgeInsets.only(left: 20, right: 10, top: 14, bottom: 14),
-                  suffixIcon: CircleAvatar(
-                    backgroundColor: Colors.transparent,
-                    child: Icon(Icons.send_outlined, color: Colors.white),
+                  suffixIcon: GestureDetector(
+                    onTap: onSendPressed,
+                    child: CircleAvatar(
+                      backgroundColor: Colors.transparent,
+                      child: Icon(Icons.send_outlined, color: Colors.white),
+                    ),
                   ),
                 ),
               ),

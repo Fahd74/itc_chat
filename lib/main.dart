@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:itc_chat/core/config/app_theme.dart';
+import 'package:itc_chat/features/chat/ui/cubit/cubit.dart';
 import 'package:itc_chat/features/screens.dart';
 
 void main() {
@@ -16,7 +18,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: AppTheme.lightTheme,
       darkTheme: AppTheme.darkTheme,
-      home: const ChatScreen(),
+      home: BlocProvider(create: (context) => ChatCubit(), child: ChatScreen()),
     );
   }
 }

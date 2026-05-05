@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:itc_chat/core/constants/constants.dart';
 
+
 class AppTheme {
   // ==========================================
   // LIGHT THEME
