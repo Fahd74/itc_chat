@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:itc_chat/features/auth/ui/cubit/auth_cubit.dart';
 import 'package:itc_chat/features/chat/data/datasources/gemini_datasource.dart';
 import 'package:itc_chat/features/chat/data/repositories/chat_repository_impl.dart';
 import 'package:itc_chat/features/chat/domain/entities/chat_message.dart';
@@ -52,6 +53,14 @@ class _ChatScreenState extends State<ChatScreen> {
         appBar: AppBar(
           backgroundColor: Theme.of(context).colorScheme.primaryContainer,
           title: const Text('ITC Ai Chat'),
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.logout),
+              onPressed: () {
+                context.read<AuthCubit>().logout();
+              },
+            ),
+          ],
         ),
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         body: Padding(
