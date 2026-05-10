@@ -18,12 +18,12 @@ class GlassEffect extends StatelessWidget {
           decoration: BoxDecoration(
             boxShadow: [
               BoxShadow(
-                color: Theme.of(context).scaffoldBackgroundColor.withValues(alpha: 0.9),
+                color: Theme.of(context).scaffoldBackgroundColor,
                 blurRadius: 25,
                 spreadRadius: 1,
               ),
             ],
-            color: AppColors.glassColor.withValues(alpha: 0.3),
+            color: AppColors.glassColor.withValues(alpha: 0.35),
             borderRadius: borderRadius,
             border: Border.symmetric(
               vertical: BorderSide(color: Colors.white.withValues(alpha: 0.4), width: 1.1),

@@ -34,7 +34,6 @@ class MockAuthRepository implements AuthRepository {
       throw Exception(errorMessage);
     }
     _isAuthenticated = true;
-    _authStateController.add(true);
   }
 
   @override
@@ -43,13 +42,11 @@ class MockAuthRepository implements AuthRepository {
       throw Exception(errorMessage);
     }
     _isAuthenticated = true;
-    _authStateController.add(true);
   }
 
   @override
   Future<void> signOut() async {
     _isAuthenticated = false;
-    _authStateController.add(false);
   }
 }
 

@@ -14,7 +14,7 @@ class AppTheme {
       primaryColor: AppColors.primary,
 
       colorScheme: const ColorScheme.light(
-        primaryContainer: AppColors.genoa550,
+        primaryContainer: AppColors.genoa600,
         secondary: AppColors.primaryDark,
         surface: AppColors.lightSurface,
         error: AppColors.error,
