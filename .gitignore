@@ -44,3 +44,12 @@ app.*.map.json
 /android/app/profile
 /android/app/release
 .env
+backend/data/documents/Lec-1-Cpp.pdf
+backend/data/documents/Lec-2-Cpp.pdf
+backend/data/documents/Lec-3-Cpp.pdf
+backend/data/documents/Lec-4-Cpp.pdf
+backend/chroma_db/3b2eefcd-4ca7-4013-99fe-fa0e09b5c8ac/link_lists.bin
+backend/chroma_db/3b2eefcd-4ca7-4013-99fe-fa0e09b5c8ac/length.bin
+backend/chroma_db/3b2eefcd-4ca7-4013-99fe-fa0e09b5c8ac/header.bin
+backend/chroma_db/3b2eefcd-4ca7-4013-99fe-fa0e09b5c8ac/data_level0.bin
+backend/chroma_db/chroma.sqlite3
