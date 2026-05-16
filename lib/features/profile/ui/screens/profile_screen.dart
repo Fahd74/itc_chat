@@ -7,11 +7,27 @@ class ProfileScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
-        title: const Text(
-          'Ai Academic Assistant',
-          style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.w600),
+        surfaceTintColor: Colors.transparent,
+        shadowColor: Colors.black.withValues(alpha: 0.15),
+        elevation: 3,
+        leading: Builder(
+          builder: (context) {
+            return IconButton(
+              icon: Icon(
+                Icons.school_outlined,
+                color: Theme.of(context).primaryColor,
+                size: 24,
+              ),
+              onPressed: () {
+                Scaffold.of(context).openDrawer();
+              },
+            );
+          },
         ),
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        title: Text('Assist AI', style: TextStyle(color: Theme.of(context).primaryColor)),
       ),
       drawer: const SidebarWidget(), // Injected new drawer here
       body: Builder(
@@ -21,68 +37,8 @@ class ProfileScreen extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Top Bar
-                  // Container(
-                  //   padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
-                  //   decoration: const BoxDecoration(
-                  //     color: Color(0xFF0F766E), // Teal color
-                  //     borderRadius: BorderRadius.only(
-                  //       bottomLeft: Radius.circular(0),
-                  //       bottomRight: Radius.circular(0),
-                  //     ),
-                  //   ),
-                  //   child: Row(
-                  //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  //     children: [
-                  //       Container(
-                  //         padding: const EdgeInsets.all(8),
-                  //         decoration: ShapeDecoration(
-                  //           color: const Color(0x33000000), // Semi-transparent dark
-                  //           shape: RoundedRectangleBorder(
-                  //             borderRadius: BorderRadius.circular(10),
-                  //             side: BorderSide(color: Colors.white.withValues(alpha: 0.1)),
-                  //           ),
-                  //         ),
-                  //         child: InkWell(
-                  //           onTap: () {
-                  //             Scaffold.of(context).openDrawer();
-                  //           },
-                  //           child: const Icon(
-                  //             Icons.school_outlined,
-                  //             color: Colors.white,
-                  //             size: 20,
-                  //           ),
-                  //         ),
-                  //       ),
-                  //       const Text(
-                  //         'Ai Academic Assistant',
-                  //         style: TextStyle(
-                  //           color: Colors.white,
-                  //           fontSize: 18,
-                  //           fontWeight: FontWeight.w600,
-                  //         ),
-                  //       ),
-                  //       Container(
-                  //         padding: const EdgeInsets.all(8),
-                  //         decoration: ShapeDecoration(
-                  //           color: const Color(0x33000000), // Semi-transparent dark
-                  //           shape: RoundedRectangleBorder(
-                  //             borderRadius: BorderRadius.circular(10),
-                  //             side: BorderSide(color: Colors.white.withValues(alpha: 0.1)),
-                  //           ),
-                  //         ),
-                  //         child: const Icon(
-                  //           Icons.school_outlined,
-                  //           color: Colors.white,
-                  //           size: 20,
-                  //         ),
-                  //       ),
-                  //     ],
-                  //   ),
-                  // ),
-                  const SizedBox(height: 40),
-
                   // Profile Information
+                  SizedBox(height: 16),
                   Center(
                     child: Column(
                       children: [
@@ -93,33 +49,34 @@ class ProfileScreen extends StatelessWidget {
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
                             border: Border.all(
-                              color: const Color(0xFF0F766E).withValues(alpha: 0.3),
+                              color: Theme.of(context).primaryColor.withValues(alpha: 0.3),
                               width: 2,
                             ),
-                            image: const DecorationImage(
-                              image: NetworkImage(
-                                'https://images.unsplash.com/photo-1599566150163-29194dcaad36?ixlib=rb-4.0.3&auto=format&fit=crop&w=256&q=80',
-                              ),
-                              fit: BoxFit.cover,
-                            ),
+                          ),
+                          child: Icon(
+                            Icons.person,
+                            size: 50,
+                            color: Theme.of(context).primaryColor,
                           ),
                         ),
                         const SizedBox(height: 16),
                         // Name Text
-                        const Text(
-                          'Fares Mohamed',
+                        Text(
+                          'Fahd Mohamed',
                           style: TextStyle(
-                            color: Color(0xFF2DD4BF), // Light Teal text
+                            color: Theme.of(context).primaryColor, // Light Teal text
                             fontSize: 20,
                             fontWeight: FontWeight.w600,
                           ),
                         ),
                         const SizedBox(height: 4),
                         // Title Text
-                        const Text(
-                          'Grauate Researcher.Stanord Uni',
+                        Text(
+                          'Software Engineering Student',
                           style: TextStyle(
-                            color: Color(0xFFA3A3A3), // Light grey text
+                            color: Theme.of(
+                              context,
+                            ).colorScheme.onSurfaceVariant, // Light grey text
                             fontSize: 14,
                             fontWeight: FontWeight.w500,
                           ),
@@ -138,8 +95,8 @@ class ProfileScreen extends StatelessWidget {
                           child: ElevatedButton(
                             onPressed: () {},
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: const Color(0xFF0F766E),
-                              foregroundColor: Colors.white,
+                              backgroundColor: Theme.of(context).primaryColor,
+                              foregroundColor: Theme.of(context).colorScheme.onPrimary,
                               padding: const EdgeInsets.symmetric(vertical: 16),
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(16),
@@ -149,18 +106,6 @@ class ProfileScreen extends StatelessWidget {
                             child: const Text(
                               'Edit profile',
                               style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-                            ),
-                          ),
-                        ),
-                        const SizedBox(width: 16),
-                        Container(
-                          width: 56,
-                          height: 56,
-                          decoration: ShapeDecoration(
-                            color: const Color(0xFF1E293B), // Dark slate
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(16),
-                              side: const BorderSide(color: Color(0xFF334155), width: 1),
                             ),
                           ),
                         ),
@@ -192,11 +137,13 @@ class ProfileScreen extends StatelessWidget {
                           child: Container(
                             padding: const EdgeInsets.all(20),
                             decoration: ShapeDecoration(
-                              color: const Color(0xFF112220), // Very dark teal background
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .surfaceContainerHighest, // Very dark teal background
                               shape: RoundedRectangleBorder(
-                                side: const BorderSide(
-                                  color: Color(0xFF0F766E), // Teal border
-                                  width: 1,
+                                side: BorderSide(
+                                  color: Theme.of(context).primaryColor, // Teal border
+                                  width: 3,
                                 ),
                                 borderRadius: BorderRadius.circular(16),
                               ),
@@ -213,10 +160,10 @@ class ProfileScreen extends StatelessWidget {
                                   ),
                                 ),
                                 const SizedBox(height: 12),
-                                const Text(
+                                Text(
                                   'BOOKS\nSUMMARIZED',
                                   style: TextStyle(
-                                    color: Color(0xFFE2E8F0),
+                                    color: Theme.of(context).colorScheme.onSurfaceVariant,
                                     fontSize: 13,
                                     fontWeight: FontWeight.w500,
                                     height: 1.4,
@@ -231,13 +178,11 @@ class ProfileScreen extends StatelessWidget {
                           child: Container(
                             padding: const EdgeInsets.all(20),
                             decoration: ShapeDecoration(
-                              color: const Color(0xFF112220),
+                              color: Theme.of(context).colorScheme.surfaceContainerHighest,
                               shape: RoundedRectangleBorder(
                                 side: BorderSide(
-                                  color: const Color(
-                                    0xFF0F766E,
-                                  ).withValues(alpha: 0.5), // Lighter border
-                                  width: 1,
+                                  color: Theme.of(context).primaryColor, // Lighter border
+                                  width: 3,
                                 ),
                                 borderRadius: BorderRadius.circular(16),
                               ),
@@ -254,10 +199,10 @@ class ProfileScreen extends StatelessWidget {
                                   ),
                                 ),
                                 const SizedBox(height: 12),
-                                const Text(
+                                Text(
                                   'PROBLEMS\nSOLVED',
                                   style: TextStyle(
-                                    color: Color(0xFFE2E8F0),
+                                    color: Theme.of(context).colorScheme.onSurfaceVariant,
                                     fontSize: 13,
                                     fontWeight: FontWeight.w500,
                                     height: 1.4,
@@ -277,26 +222,31 @@ class ProfileScreen extends StatelessWidget {
                     child: Column(
                       children: [
                         _buildOptionTile(
+                          context,
                           icon: Icons.menu_book_outlined,
                           title: 'My Learning Path',
                           subtitle: 'Personalized curriculum',
                         ),
                         _buildOptionTile(
+                          context,
                           icon: Icons.notifications_none_outlined,
                           title: 'Notifications',
                           subtitle: 'Updates and reminders',
                         ),
                         _buildOptionTile(
+                          context,
                           icon: Icons.api_outlined,
                           title: 'Academic Resources',
                           subtitle: 'Library & datasets',
                         ),
                         _buildOptionTile(
+                          context,
                           icon: Icons.shield_outlined,
                           title: 'Security',
                           subtitle: 'Privacy & account protection',
                         ),
                         _buildOptionTile(
+                          context,
                           icon: Icons.headset_mic_outlined,
                           title: 'Academic Support',
                           subtitle: '24/7 AI & human assistance',
@@ -314,8 +264,8 @@ class ProfileScreen extends StatelessWidget {
                       child: ElevatedButton(
                         onPressed: () {},
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.red,
-                          foregroundColor: Colors.white,
+                          backgroundColor: Theme.of(context).colorScheme.error,
+                          foregroundColor: Theme.of(context).colorScheme.onError,
                           padding: const EdgeInsets.symmetric(vertical: 16),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(16),
@@ -346,7 +296,8 @@ class ProfileScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildOptionTile({
+  Widget _buildOptionTile(
+    BuildContext context, {
     required IconData icon,
     required String title,
     required String subtitle,
@@ -354,9 +305,12 @@ class ProfileScreen extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       decoration: ShapeDecoration(
-        color: const Color(0xFF112220),
+        color: Theme.of(context).colorScheme.surfaceContainerHighest,
         shape: RoundedRectangleBorder(
-          side: BorderSide(color: const Color(0xFF0F766E).withValues(alpha: 0.3), width: 1),
+          side: BorderSide(
+            color: Theme.of(context).primaryColor.withValues(alpha: 0.3),
+            width: 3,
+          ),
           borderRadius: BorderRadius.circular(16),
         ),
       ),
@@ -368,18 +322,18 @@ class ProfileScreen extends StatelessWidget {
             color: Colors.transparent,
             shape: RoundedRectangleBorder(
               side: BorderSide(
-                color: const Color(0xFF0F766E).withValues(alpha: 0.3),
-                width: 1,
+                color: Theme.of(context).primaryColor.withValues(alpha: 0.3),
+                width: 3,
               ),
               borderRadius: BorderRadius.circular(12),
             ),
           ),
-          child: Icon(icon, color: Colors.white70, size: 22),
+          child: Icon(icon, color: Theme.of(context).primaryColor, size: 22),
         ),
         title: Text(
           title,
-          style: const TextStyle(
-            color: Colors.white,
+          style: TextStyle(
+            color: Theme.of(context).colorScheme.onSurface,
             fontSize: 15,
             fontWeight: FontWeight.w600,
           ),
@@ -388,13 +342,13 @@ class ProfileScreen extends StatelessWidget {
           padding: const EdgeInsets.only(top: 4),
           child: Text(
             subtitle,
-            style: const TextStyle(
-              color: Color(0xFF94A3B8), // slate-400
+            style: TextStyle(
+              color: Theme.of(context).colorScheme.onSurfaceVariant, // slate-400
               fontSize: 13,
             ),
           ),
         ),
-        trailing: const Icon(Icons.chevron_right, color: Colors.white54, size: 20),
+        trailing: Icon(Icons.chevron_right, color: Theme.of(context).primaryColor, size: 20),
         onTap: () {},
       ),
     );

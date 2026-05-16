@@ -23,9 +23,9 @@ class SidebarWidget extends StatelessWidget {
               child: Row(
                 children: [
                   Container(
-                    padding: const EdgeInsets.all(8),
+                    padding: const EdgeInsets.all(0),
                     decoration: ShapeDecoration(
-                      color: const Color(0x330F766E), // Teal tint background
+                      color: Colors.transparent, // Teal tint background
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10),
                         side: BorderSide(
@@ -33,7 +33,12 @@ class SidebarWidget extends StatelessWidget {
                         ),
                       ),
                     ),
-                    child: const Icon(Icons.school_outlined, color: Colors.white, size: 24),
+                    child: Image.asset(
+                      'assets/Logo.png',
+                      width: 48,
+                      height: 48,
+                      fit: BoxFit.cover,
+                    ),
                   ),
                   const SizedBox(width: 12),
                   const Column(
@@ -71,6 +76,10 @@ class SidebarWidget extends StatelessWidget {
                   final historyCubit = context.read<ChatHistoryCubit>();
                   historyCubit.createNewConversation();
                   Navigator.pop(context); // Close drawer
+                  Navigator.popUntil(
+                    context,
+                    (route) => route.isFirst,
+                  ); // Go back to ChatScreen if in another screen like Profile
                 },
                 borderRadius: BorderRadius.circular(20),
                 child: Container(
@@ -191,8 +200,8 @@ class SidebarWidget extends StatelessWidget {
                                 color: isActive
                                     ? const Color(0xFF0F766E)
                                     : isDark
-                                        ? Colors.white.withValues(alpha: 0.8)
-                                        : const Color(0xFF999999),
+                                    ? Colors.white.withValues(alpha: 0.8)
+                                    : const Color(0xFF999999),
                                 fontSize: 14,
                                 fontFamily: 'Public Sans',
                                 fontWeight: isActive ? FontWeight.w600 : FontWeight.w500,
@@ -201,6 +210,10 @@ class SidebarWidget extends StatelessWidget {
                             onTap: () {
                               context.read<ChatHistoryCubit>().selectConversation(conv.id);
                               Navigator.pop(context); // Close drawer
+                              Navigator.popUntil(
+                                context,
+                                (route) => route.isFirst,
+                              ); // Go back to ChatScreen
                             },
                           ),
                         );
@@ -236,18 +249,31 @@ class SidebarWidget extends StatelessWidget {
                         builder: (dialogContext) => AlertDialog(
                           backgroundColor: isDark ? const Color(0xFF1E1E1E) : Colors.white,
                           title: const Text('Clear All History?'),
-                          content: const Text('This will delete all your conversations permanently.'),
+                          content: const Text(
+                            'This will delete all your conversations permanently.',
+                          ),
                           actions: [
                             TextButton(
                               onPressed: () => Navigator.pop(dialogContext),
-                              child: const Text('Cancel', style: TextStyle(color: Color(0xFF0F766E))),
+                              child: const Text(
+                                'Cancel',
+                                style: TextStyle(color: Color(0xFF0F766E)),
+                              ),
                             ),
                             TextButton(
                               onPressed: () {
                                 context.read<ChatHistoryCubit>().clearAllHistory();
-                                Navigator.pop(dialogContext);
+                                Navigator.pop(dialogContext); // Close dialog
+                                Navigator.pop(context); // Close drawer
+                                Navigator.popUntil(
+                                  context,
+                                  (route) => route.isFirst,
+                                ); // Go back to ChatScreen
                               },
-                              child: const Text('Delete All', style: TextStyle(color: Colors.redAccent)),
+                              child: const Text(
+                                'Delete All',
+                                style: TextStyle(color: Colors.redAccent),
+                              ),
                             ),
                           ],
                         ),
@@ -341,12 +367,11 @@ class SidebarWidget extends StatelessWidget {
                                 color: Colors.green, // Green status border
                                 width: 2,
                               ),
-                              image: const DecorationImage(
-                                image: NetworkImage(
-                                  'https://images.unsplash.com/photo-1599566150163-29194dcaad36?ixlib=rb-4.0.3&auto=format&fit=crop&w=256&q=80',
-                                ),
-                                fit: BoxFit.cover,
-                              ),
+                            ),
+                            child: const Icon(
+                              Icons.person,
+                              size: 24,
+                              color: Color(0xFF0F766E),
                             ),
                           ),
                           const SizedBox(width: 12),
@@ -355,7 +380,7 @@ class SidebarWidget extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: const [
                                 Text(
-                                  'Alaa Ahmed',
+                                  'Fahd Mohamed',
                                   style: TextStyle(
                                     color: Color(0xFF0F766E), // Teal name
                                     fontSize: 14,
@@ -365,7 +390,7 @@ class SidebarWidget extends StatelessWidget {
                                   overflow: TextOverflow.ellipsis,
                                 ),
                                 Text(
-                                  'Alaa Ahmed@Gmail.Com',
+                                  'Fahd@Gmail.Com',
                                   style: TextStyle(
                                     color: Color(0xFF666666), // Subtitle color
                                     fontSize: 11,
@@ -390,4 +415,3 @@ class SidebarWidget extends StatelessWidget {
     );
   }
 }
-

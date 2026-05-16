@@ -28,7 +28,7 @@ class Settings:
     # RAG
     CHUNK_SIZE: int = 1000
     CHUNK_OVERLAP: int = 200
-    TOP_K_RESULTS: int = 5
+    TOP_K_RESULTS: int = 20
 
 
 settings = Settings()

@@ -38,7 +38,7 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF141414), // Force dark background as in ui2
+      backgroundColor: Theme.of(context).colorScheme.surface, // Background from theme
       body: BlocConsumer<AuthCubit, AuthState>(
         listener: (context, state) {
           if (state is AuthError) {
@@ -58,22 +58,25 @@ class _LoginScreenState extends State<LoginScreen> {
                     const SizedBox(height: 40),
 
                     // 1. الأيقونة البديلة للأفاتار (Icon Object)
-                    const CircleAvatar(
+                    CircleAvatar(
                       radius: 60,
-                      backgroundColor: Color(0xFF1E272E),
+                      backgroundColor: Theme.of(context).colorScheme.surfaceContainerHighest,
                       child: Icon(
                         Icons.account_circle_outlined,
                         size: 80,
-                        color: Color(0xFF00BFA5),
+                        color: Theme.of(context).primaryColor,
                       ),
                     ),
                     const SizedBox(height: 15),
-                    const Text(
+                    Text(
                       'Ai Assistant',
-                      style: TextStyle(color: Colors.grey, fontSize: 16),
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.onSurfaceVariant,
+                        fontSize: 16,
+                      ),
                     ),
                     const SizedBox(height: 10),
-                    buildWelcomeTitle(),
+                    buildWelcomeTitle(context),
 
                     const SizedBox(height: 60),
 
@@ -122,16 +125,16 @@ class _LoginScreenState extends State<LoginScreen> {
                             ),
                           );
                         },
-                        child: const Text(
+                        child: Text(
                           'Forget Password?',
-                          style: TextStyle(color: Color(0xFF00BFA5)),
+                          style: TextStyle(color: Theme.of(context).primaryColor),
                         ),
                       ),
                     ),
 
                     const SizedBox(height: 40),
                     if (state is AuthLoading)
-                      const CircularProgressIndicator(color: Color(0xFF00BFA5))
+                      CircularProgressIndicator(color: Theme.of(context).primaryColor)
                     else
                       PrimaryAppButton(text: 'Log In', onPressed: _login),
 

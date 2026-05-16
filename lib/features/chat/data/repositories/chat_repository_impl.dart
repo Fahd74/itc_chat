@@ -9,9 +9,9 @@ class ChatRepositoryImpl implements ChatRepository {
       : _dataSource = dataSource;
 
   @override
-  Future<String> sendMessage(String message, {List<ChatAttachment>? attachments}) async {
+  Future<String> sendMessage(String message, {List<ChatAttachment>? attachments, String? model}) async {
     try {
-      return await _dataSource.sendMessage(message, attachments: attachments);
+      return await _dataSource.sendMessage(message, attachments: attachments, model: model);
     } catch (e) {
       return 'حدث خطأ أثناء الاتصال بالمساعد الذكي: ${e.toString()}';
     }

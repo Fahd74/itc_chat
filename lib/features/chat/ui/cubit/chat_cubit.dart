@@ -38,7 +38,16 @@ class ChatCubit extends Cubit<ChatState> {
       // If loading fails, just start with empty messages
     }
 
-    emit(ChatUpdated(List.from(_messages)));
+    if (!isClosed) emit(ChatUpdated(List.from(_messages)));
+  }
+
+  /// Sets the conversation ID without loading messages or emitting state.
+  /// Used when creating a brand-new conversation right before sending the first message,
+  /// to avoid a race condition where loadConversation's emit overwrites
+  /// the ChatWaitingForBot state.
+  void setConversationId(String id) {
+    _conversationId = id;
+    _isFirstMessage = true;
   }
 
   /// Clears the current conversation (for "New Chat" scenario).
@@ -62,7 +71,7 @@ class ChatCubit extends Cubit<ChatState> {
     }
   }
 
-  Future<void> sendMessage(String text) async {
+  Future<void> sendMessage(String text, {String? model}) async {
     if (text.trim().isEmpty && _draftAttachments.isEmpty) return;
 
     final attachments = List<ChatAttachment>.from(_draftAttachments);
@@ -70,8 +79,8 @@ class ChatCubit extends Cubit<ChatState> {
 
     _messages.add(ChatMessage(text: text, isUser: true, attachments: attachments));
 
-    // إشعار الشاشة بتحديث القائمة (تظهر رسالة الطالب فوراً)
-    emit(ChatWaitingForBot(List.from(_messages)));
+    // إشعار الشاشة بتحديث القائمة (تظهر رسالة الطالب فوراً + typing indicator)
+    if (!isClosed) emit(ChatWaitingForBot(List.from(_messages)));
 
     // Save user message to DB
     if (_conversationId != null) {
@@ -99,7 +108,7 @@ class ChatCubit extends Cubit<ChatState> {
     }
 
     // استدعاء الذكاء الاصطناعي
-    final botResponse = await _sendMessageUseCase(text, attachments: attachments);
+    final botResponse = await _sendMessageUseCase(text, attachments: attachments, model: model);
 
     _messages.add(ChatMessage(text: botResponse, isUser: false));
 
@@ -117,7 +126,7 @@ class ChatCubit extends Cubit<ChatState> {
     }
 
     // إشعار الشاشة بالحالة الجديدة
-    emit(ChatUpdated(List.from(_messages)));
+    if (!isClosed) emit(ChatUpdated(List.from(_messages)));
   }
 }
 

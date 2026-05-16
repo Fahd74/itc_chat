@@ -13,14 +13,12 @@ class BackendDataSource implements ChatDataSource {
   final String _baseUrl;
   final String? _authToken;
 
-  BackendDataSource({
-    required String baseUrl,
-    String? authToken,
-  })  : _baseUrl = baseUrl,
-        _authToken = authToken;
+  BackendDataSource({required String baseUrl, String? authToken})
+    : _baseUrl = baseUrl,
+      _authToken = authToken;
 
   @override
-  Future<String> sendMessage(String userMessage, {List<ChatAttachment>? attachments}) async {
+  Future<String> sendMessage(String userMessage, {List<ChatAttachment>? attachments, String? model}) async {
     final uri = Uri.parse('$_baseUrl/api/chat');
 
     if (attachments == null || attachments.isEmpty) {
@@ -31,6 +29,7 @@ class BackendDataSource implements ChatDataSource {
 
       final body = jsonEncode({
         'message': userMessage,
+        if (model != null) 'model': model,
       });
 
       final response = await http.post(uri, headers: headers, body: body);
@@ -41,11 +40,24 @@ class BackendDataSource implements ChatDataSource {
         request.headers['Authorization'] = 'Bearer $_authToken';
       }
       request.fields['message'] = userMessage;
-      
-      for (var attachment in attachments) {
-        request.files.add(await http.MultipartFile.fromPath('files', attachment.path));
+      if (model != null) {
+        request.fields['model'] = model;
       }
-      
+
+      for (var attachment in attachments) {
+        if (attachment.bytes != null) {
+          request.files.add(
+            http.MultipartFile.fromBytes(
+              'files',
+              attachment.bytes!,
+              filename: attachment.name,
+            ),
+          );
+        } else {
+          request.files.add(await http.MultipartFile.fromPath('files', attachment.path));
+        }
+      }
+
       final streamedResponse = await request.send();
       final response = await http.Response.fromStream(streamedResponse);
       return _parseResponse(response);
@@ -57,9 +69,7 @@ class BackendDataSource implements ChatDataSource {
       final data = jsonDecode(response.body);
       return data['reply'] ?? 'لم أتمكن من الإجابة، حاول مرة أخرى.';
     } else {
-      throw Exception(
-        'خطأ من السيرفر (${response.statusCode}): ${response.body}',
-      );
+      throw Exception('خطأ من السيرفر (${response.statusCode}): ${response.body}');
     }
   }
 }

@@ -5,11 +5,7 @@ class PrimaryAppButton extends StatelessWidget {
   final String text;
   final VoidCallback onPressed; // وظيفة الزر عند الضغط (Callback)
 
-  const PrimaryAppButton({
-    super.key,
-    required this.text,
-    required this.onPressed,
-  });
+  const PrimaryAppButton({super.key, required this.text, required this.onPressed});
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +14,7 @@ class PrimaryAppButton extends StatelessWidget {
       height: 55,
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
-          backgroundColor: const Color(0xFF00796B), // لون الزر المائي
+          backgroundColor: Theme.of(context).primaryColor, // Theme primary
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
           elevation: 0,
         ),
@@ -28,11 +24,15 @@ class PrimaryAppButton extends StatelessWidget {
           children: [
             Text(
               text,
-              style: const TextStyle(fontSize: 18, color: Colors.white, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                fontSize: 18,
+                color: Theme.of(context).colorScheme.onPrimary,
+                fontWeight: FontWeight.bold,
+              ),
             ),
             const SizedBox(width: 10),
             // أيقونة سهم (Composition)
-            const Icon(Icons.arrow_forward, color: Colors.white),
+            Icon(Icons.arrow_forward, color: Theme.of(context).colorScheme.onPrimary),
           ],
         ),
       ),

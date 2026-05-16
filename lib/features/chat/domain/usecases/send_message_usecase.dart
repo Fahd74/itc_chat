@@ -7,7 +7,7 @@ class SendMessageUseCase {
   SendMessageUseCase({required ChatRepository repository})
       : _repository = repository;
 
-  Future<String> call(String message, {List<ChatAttachment>? attachments}) async {
-    return await _repository.sendMessage(message, attachments: attachments);
+  Future<String> call(String message, {List<ChatAttachment>? attachments, String? model}) async {
+    return await _repository.sendMessage(message, attachments: attachments, model: model);
   }
 }

@@ -55,6 +55,7 @@ dev_dependencies:
   # rules and activating additional ones.
   flutter_lints: ^6.0.0
   bloc_test: ^10.0.0
+  flutter_native_splash: ^2.4.4
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -73,6 +74,7 @@ flutter:
     - assets/Rectangle 160672 (1).png
     - assets/Rectangle 160672.png
     - assets/Rectangle 160684.png
+    - assets/Logo.png
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
@@ -106,3 +108,12 @@ flutter_launcher_icons:
   image_path: "assets/Dall-e_3__jan__24__artificial_intelligence_icon.png-removebg-preview.png"
   min_sdk_android: 21 # android min sdk min:16, default 21
   remove_alpha_ios: true
+
+flutter_native_splash:
+  color: "#141414"
+  color_dark: "#141414"
+  image: "assets/Logo.png"
+  android_12:
+    color: "#141414"
+    color_dark: "#141414"
+    image: "assets/Logo.png"

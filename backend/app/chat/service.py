@@ -1,9 +1,10 @@
-"""Chat service — orchestrates the RAG pipeline and Gemini API calls."""
+"""Chat service — orchestrates the RAG pipeline and OpenRouter API calls."""
 
 import os
 import google.generativeai as genai
 from app.config import settings
 from app.rag.vector_store import search_similar
+
 
 # Configure Gemini
 genai.configure(api_key=settings.GEMINI_API_KEY)
@@ -12,37 +13,75 @@ genai.configure(api_key=settings.GEMINI_API_KEY)
 SYSTEM_PROMPT = """أنت مساعد ذكي لطلاب كلية تكنولوجيا المعلومات (ITC).
 مهمتك هي مساعدة الطلاب بالإجابة على أسئلتهم المتعلقة بالمواد الدراسية والمحاضرات.
 
+المواد المتاحة في قاعدة البيانات:
+- Advanced Cpp (البرمجة المتقدمة بلغة C++)
+- Algorithms (الخوارزميات)
+- Embedded Systems (الأنظمة المدمجة — Arduino, ADC, sensors, microcontrollers)
+- Mobile App (تطبيقات الهاتف — Flutter, Dart)
+- Network Programming (برمجة الشبكات — TCP, UDP, Sockets, Java)
+- Software Engineering (هندسة البرمجيات — SDLC, UML, Design Patterns)
+
 قواعد مهمة:
 1. أجب بلغة الطالب (عربي أو إنجليزي).
-2. إذا تم توفير سياق من المحاضرات، استخدمه في إجابتك واذكر المصدر.
-3. إذا لم تجد إجابة في السياق المتوفر، أجب من معرفتك العامة مع التنويه.
-4. كن موجزاً ومفيداً.
-5. استخدم تنسيق Markdown لتنسيق إجابتك (عناوين، نقاط، كود، إلخ).
+2. عند وجود سياق من عدة مواد، ركز على المادة **الأكثر صلة** بالسؤال. انظر لعلامة [مادة: ...] في كل مصدر.
+3. إذا وجدت الإجابة في السياق، استخدمها واذكر المصدر (اسم المادة + رقم المحاضرة/الشيت).
+4. إذا كان السياق المتوفر من مادة غير متعلقة بالسؤال، تجاهله وأجب من معرفتك العامة مع التنويه.
+5. كن دقيقاً ومفيداً واستخدم تنسيق Markdown.
 """
 
 
 def _build_rag_prompt(user_message: str, context_chunks: list) -> str:
     """
     Build a prompt that includes retrieved context from the knowledge base.
+    Uses hierarchical metadata (subject, level, semester) for richer context.
     """
     if not context_chunks:
         return user_message
 
-    context_text = "\n\n---\n\n".join([
-        f"📄 **{doc.metadata.get('source', 'Unknown')}** (Page {doc.metadata.get('page', '?')}):\n{doc.page_content}"
-        for doc, score in context_chunks
-    ])
+    context_parts = []
+    for doc, score in context_chunks:
+        meta = doc.metadata
+        # Build a descriptive source label from metadata
+        source_parts = []
+        if meta.get("subject"):
+            source_parts.append(f"مادة: {meta['subject']}")
+        if meta.get("level"):
+            source_parts.append(meta["level"])
+        if meta.get("semester"):
+            source_parts.append(meta["semester"])
+        if meta.get("doc_type"):
+            type_labels = {
+                "lecture": "محاضرة",
+                "sheet": "شيت",
+                "sheet_answer": "إجابة شيت",
+                "lab": "لاب",
+                "lab_answer": "إجابة لاب",
+                "revision": "مراجعة",
+                "project": "مشروع",
+                "schedule": "جدول",
+            }
+            source_parts.append(type_labels.get(meta["doc_type"], meta["doc_type"]))
+
+        source_label = " | ".join(source_parts) if source_parts else meta.get("source", "Unknown")
+        page = meta.get("page", "?")
+        filename = meta.get("filename", meta.get("source", "Unknown"))
+
+        context_parts.append(
+            f"📄 **{filename}** [{source_label}] (صفحة {page}):\n{doc.page_content}"
+        )
+
+    context_text = "\n\n---\n\n".join(context_parts)
 
     if not context_text:
         return user_message
 
     return f"""السؤال: {user_message}
 
---- السياق من المحاضرات ---
+--- السياق من المحاضرات والمراجع ---
 {context_text}
 --- نهاية السياق ---
 
-أجب على السؤال بناءً على السياق المتوفر أعلاه. إذا لم يكن السياق كافياً، أجب من معرفتك العامة مع التنويه."""
+أجب على السؤال بناءً على السياق المتوفر أعلاه. إذا وجدت الإجابة في السياق اذكر المصدر (اسم المادة والمحاضرة). إذا لم يكن السياق كافياً، أجب من معرفتك العامة مع التنويه."""
 
 
 async def generate_response(
@@ -121,3 +160,4 @@ async def generate_response(
     except Exception as e:
         print(f"❌ Gemini API error: {e}")
         return f"حدث خطأ أثناء الاتصال بالمساعد الذكي: {str(e)}"
+

@@ -4,10 +4,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:file_picker/file_picker.dart';
-import 'package:itc_chat/features/chat/data/datasources/chat_datasource.dart';
 import 'package:itc_chat/features/chat/data/datasources/gemini_datasource.dart';
-import 'package:itc_chat/features/chat/data/datasources/backend_datasource.dart';
 import 'package:itc_chat/features/chat/data/datasources/chat_history_datasource.dart';
+import 'package:itc_chat/features/chat/data/datasources/groq_datasource.dart';
+import 'package:itc_chat/features/chat/data/datasources/hybrid_datasource.dart';
 import 'package:itc_chat/features/chat/data/repositories/chat_repository_impl.dart';
 import 'package:itc_chat/features/chat/domain/entities/chat_message.dart';
 import 'package:itc_chat/features/chat/domain/entities/chat_attachment.dart';
@@ -37,15 +37,15 @@ class _ChatScreenState extends State<ChatScreen> {
     super.initState();
 
     // --- Data Source Selection (Strategy Pattern) ---
-    final backendUrl = dotenv.env['BACKEND_URL'];
-    final ChatDataSource dataSource;
-
-    if (backendUrl != null && backendUrl.isNotEmpty) {
-      final token = Supabase.instance.client.auth.currentSession?.accessToken;
-      dataSource = BackendDataSource(baseUrl: backendUrl, authToken: token);
-    } else {
-      dataSource = GeminiDataSource(dotenv.env['GEMINI_API_KEY'] ?? '');
-    }
+    // Always use HybridDataSource (direct Gemini + Groq) which includes
+    // system prompts with subject catalog. The backend RAG server is only
+    // used when explicitly enabled AND running.
+    final geminiDs = GeminiDataSource(dotenv.env['GEMINI_API_KEY'] ?? '');
+    final groqDs = GroqDataSource(dotenv.env['GROQ_API_KEY'] ?? '');
+    final dataSource = HybridDataSource(
+      geminiDataSource: geminiDs,
+      groqDataSource: groqDs,
+    );
 
     final repository = ChatRepositoryImpl(dataSource: dataSource);
     final useCase = SendMessageUseCase(repository: repository);
@@ -81,7 +81,11 @@ class _ChatScreenState extends State<ChatScreen> {
     // Create a new conversation in Supabase and set it active
     final historyCubit = context.read<ChatHistoryCubit>();
     final newId = await historyCubit.createNewConversation();
-    _chatCubit.loadConversation(newId);
+    
+    // Use setConversationId instead of loadConversation to avoid
+    // emitting ChatUpdated([]) which would erase the user's message
+    // and hide the typing indicator.
+    _chatCubit.setConversationId(newId);
   }
 
   @override
@@ -102,23 +106,31 @@ class _ChatScreenState extends State<ChatScreen> {
         },
         child: Scaffold(
           appBar: AppBar(
+            surfaceTintColor: Colors.transparent,
+            shadowColor: Colors.black.withValues(alpha: 0.15),
+            elevation: 3,
             leading: Builder(
               builder: (context) {
                 return IconButton(
-                  icon: const Icon(Icons.school_outlined, color: Colors.white, size: 24),
+                  icon: Icon(
+                    Icons.school_outlined,
+                    color: Theme.of(context).primaryColor,
+                    size: 24,
+                  ),
                   onPressed: () {
                     Scaffold.of(context).openDrawer();
                   },
                 );
               },
             ),
-            backgroundColor: Theme.of(context).colorScheme.primaryContainer,
-            title: const Text('ITC Ai Chat'),
+            backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+            title: Text('Assist AI', style: TextStyle(color: Theme.of(context).primaryColor)),
           ),
+
           drawer: const SidebarWidget(),
           backgroundColor: Theme.of(context).scaffoldBackgroundColor,
           body: Padding(
-            padding: const EdgeInsets.all(16.0),
+            padding: const EdgeInsets.all(10.0),
             child: Stack(
               children: [
                 BlocConsumer<ChatCubit, ChatState>(
@@ -138,8 +150,17 @@ class _ChatScreenState extends State<ChatScreen> {
                       currentMessages = state.messages;
                     }
 
+                    if (currentMessages.isEmpty && !isWaiting) {
+                      return Center(
+                        child: Opacity(
+                          opacity: 0.5,
+                          child: Image.asset('assets/Logo.png', width: 500, height: 500),
+                        ),
+                      );
+                    }
+
                     return ListView.builder(
-                      padding: const EdgeInsets.only(bottom: 50),
+                      padding: const EdgeInsets.only(bottom: 100),
                       controller: _scrollController,
                       itemCount: currentMessages.length + (isWaiting ? 1 : 0),
                       itemBuilder: (context, index) {
@@ -161,15 +182,19 @@ class _ChatScreenState extends State<ChatScreen> {
                         return ChatInputBar(
                           controller: _controller,
                           draftAttachments: drafts,
-                          onSendPressed: () async {
+                          onSendPressed: (model) async {
                             final text = _controller.text;
                             if (text.trim().isEmpty) return;
+
+                            // Clear input immediately for instant feedback
+                            _controller.clear();
 
                             // Ensure we have a conversation before sending
                             await _ensureConversation();
 
-                            context.read<ChatCubit>().sendMessage(text);
-                            _controller.clear();
+                            // Send message (don't await — let it run in background
+                            // so the UI stays responsive with the typing indicator)
+                            context.read<ChatCubit>().sendMessage(text, model: model);
 
                             // Refresh sidebar to show updated title
                             context.read<ChatHistoryCubit>().loadConversations();
@@ -240,4 +265,3 @@ class _ChatScreenState extends State<ChatScreen> {
     );
   }
 }
-

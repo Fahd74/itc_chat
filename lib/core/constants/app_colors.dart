@@ -33,7 +33,7 @@ class AppColors {
   // ==========================================
   // Light Mode Mapping
   // ==========================================
-  static const Color lightBackground = woodsmoke50; // #FAFAFA
+  static const Color lightBackground = Color(0xFFFAFAFA); // #FAFAFA
   static const Color lightSurface = Colors.white;
   static const Color lightInputFill = woodsmoke50;
   static const Color lightPrimaryText = woodsmoke900; // #121212

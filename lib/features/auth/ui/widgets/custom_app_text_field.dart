@@ -26,7 +26,7 @@ class CustomAppTextField extends StatelessWidget {
         // نص العنوان فوق الحقل
         Text(
           label,
-          style: const TextStyle(color: Color(0xFF00BFA5), fontWeight: FontWeight.w600),
+          style: TextStyle(color: Theme.of(context).primaryColor, fontWeight: FontWeight.w600),
         ),
         const SizedBox(height: 10),
         // كلاس الـ TextFormField هو الـ Property الأساسي هنا
@@ -34,29 +34,33 @@ class CustomAppTextField extends StatelessWidget {
           controller: controller,
           validator: validator,
           obscureText: isPassword, // إخفاء النص إذا كانت كلمة مرور
-          style: const TextStyle(color: Colors.white),
+          style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
           decoration: InputDecoration(
             hintText: hint,
-            hintStyle: const TextStyle(color: Colors.white38),
+            hintStyle: TextStyle(
+              color: Theme.of(context).colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
+            ),
             filled: true,
-            fillColor: Colors.black26, // لون خلفية الحقل
+            fillColor: Theme.of(
+              context,
+            ).colorScheme.surfaceContainerHighest, // لون خلفية الحقل
             contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
             // حدود الحقل بشكل دائري كما في التصميم
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(15),
-              borderSide: const BorderSide(color: Color(0xFF004D40)),
+              borderSide: BorderSide(color: Theme.of(context).colorScheme.outline),
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(15),
-              borderSide: const BorderSide(color: Color(0xFF00BFA5)),
+              borderSide: BorderSide(color: Theme.of(context).primaryColor),
             ),
             errorBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(15),
-              borderSide: const BorderSide(color: Colors.redAccent),
+              borderSide: BorderSide(color: Theme.of(context).colorScheme.error),
             ),
             focusedErrorBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(15),
-              borderSide: const BorderSide(color: Colors.redAccent),
+              borderSide: BorderSide(color: Theme.of(context).colorScheme.error),
             ),
           ),
         ),

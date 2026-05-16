@@ -35,15 +35,15 @@ class _SignupScreenState extends State<SignupScreen> {
   void _signup() {
     if (!_formKey.currentState!.validate()) return;
     context.read<AuthCubit>().signup(
-          _emailController.text.trim(),
-          _passwordController.text.trim(),
-        );
+      _emailController.text.trim(),
+      _passwordController.text.trim(),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF141414), // Force dark background as in ui2
+      backgroundColor: Theme.of(context).colorScheme.surface, // Background from theme
       body: BlocConsumer<AuthCubit, AuthState>(
         listener: (context, state) {
           if (state is AuthError) {
@@ -63,11 +63,24 @@ class _SignupScreenState extends State<SignupScreen> {
                   children: [
                     buildBackButton(context),
                     const SizedBox(height: 30),
-                    const Text('Create Account', style: TextStyle(color: Color(0xFF00BFA5), fontSize: 32, fontWeight: FontWeight.bold)),
+                    Text(
+                      'Create Account',
+                      style: TextStyle(
+                        color: Theme.of(context).primaryColor,
+                        fontSize: 32,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                     const SizedBox(height: 8),
-                    const Text('Lorem Ipsum Dolor Sit Amet Consectetur...', style: TextStyle(color: Colors.grey, fontSize: 14)),
+                    Text(
+                      'Lorem Ipsum Dolor Sit Amet Consectetur...',
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.onSurfaceVariant,
+                        fontSize: 14,
+                      ),
+                    ),
                     const SizedBox(height: 40),
-                    
+
                     // استخدام الـ Widgets المشتركة
                     CustomAppTextField(
                       label: 'Full Name',
@@ -84,7 +97,8 @@ class _SignupScreenState extends State<SignupScreen> {
                       hint: 'Enter',
                       controller: _emailController,
                       validator: (value) {
-                        if (value == null || value.trim().isEmpty) return 'يرجى إدخال البريد الإلكتروني';
+                        if (value == null || value.trim().isEmpty)
+                          return 'يرجى إدخال البريد الإلكتروني';
                         if (!value.contains('@')) return 'يرجى إدخال بريد إلكتروني صحيح';
                         return null;
                       },
@@ -96,8 +110,10 @@ class _SignupScreenState extends State<SignupScreen> {
                       isPassword: true,
                       controller: _passwordController,
                       validator: (value) {
-                        if (value == null || value.trim().isEmpty) return 'يرجى إدخال كلمة المرور';
-                        if (value.length < 6) return 'كلمة المرور يجب أن تكون 6 أحرف على الأقل';
+                        if (value == null || value.trim().isEmpty)
+                          return 'يرجى إدخال كلمة المرور';
+                        if (value.length < 6)
+                          return 'كلمة المرور يجب أن تكون 6 أحرف على الأقل';
                         return null;
                       },
                     ),
@@ -113,10 +129,14 @@ class _SignupScreenState extends State<SignupScreen> {
                       hint: 'IT',
                       controller: _departmentController,
                     ),
-                    
+
                     const SizedBox(height: 50),
                     if (state is AuthLoading)
-                      const Center(child: CircularProgressIndicator(color: Color(0xFF00BFA5)))
+                      Center(
+                        child: CircularProgressIndicator(
+                          color: Theme.of(context).primaryColor,
+                        ),
+                      )
                     else
                       PrimaryAppButton(text: 'Continue', onPressed: _signup),
                   ],

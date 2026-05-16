@@ -48,7 +48,7 @@ async def save_message(user_id: str, message: str, role: str, attachments: list 
             "created_at": datetime.now(timezone.utc).isoformat(),
         }
 
-        client.table("chat_messages").insert(data).execute()
+        client.table("messages").insert(data).execute()
     except Exception as e:
         print(f"⚠️  Failed to save message to Supabase: {e}")
 
@@ -65,7 +65,7 @@ async def get_chat_history(user_id: str, limit: int = 50) -> list:
 
     try:
         response = (
-            client.table("chat_messages")
+            client.table("messages")
             .select("*")
             .eq("user_id", user_id)
             .order("created_at", desc=False)
@@ -89,7 +89,7 @@ async def get_recent_context(user_id: str, count: int = 6) -> list:
 
     try:
         response = (
-            client.table("chat_messages")
+            client.table("messages")
             .select("role, message")
             .eq("user_id", user_id)
             .order("created_at", desc=True)

@@ -38,7 +38,7 @@ class MyApp extends StatelessWidget {
       ],
       child: _AppWithAuthListener(
         child: MaterialApp(
-          title: 'ITC Ai Chat',
+          title: 'Assist AI',
           debugShowCheckedModeBanner: false,
           theme: AppTheme.lightTheme,
           darkTheme: AppTheme.darkTheme,

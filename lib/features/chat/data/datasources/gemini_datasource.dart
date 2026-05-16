@@ -9,13 +9,40 @@ import 'chat_datasource.dart';
 /// Used as a fallback or for development/testing when the Spring Boot
 /// backend is not running.
 class GeminiDataSource implements ChatDataSource {
-  final GenerativeModel _model;
+  final String _apiKey;
 
-  GeminiDataSource(String apiKey)
-    : _model = GenerativeModel(model: 'gemini-2.5-flash', apiKey: apiKey);
+  GeminiDataSource(String apiKey) : _apiKey = apiKey;
+
+  /// System instruction shared across all Gemini calls.
+  static const String _systemInstruction = '''أنت مساعد ذكي اسمك "Assist AI" لطلاب كلية تكنولوجيا المعلومات (ITC).
+مهمتك هي مساعدة الطلاب بالإجابة على أسئلتهم المتعلقة بالمواد الدراسية والمحاضرات.
+
+المواد الدراسية المتاحة حالياً (الفرقة الثالثة - الفصل الدراسي الثاني):
+- Advanced C++ (البرمجة المتقدمة بلغة C++ — OOP, Templates, STL, Polymorphism, Operator Overloading)
+- Algorithms (الخوارزميات — Sorting, Searching, Graph Algorithms, Dynamic Programming, Complexity Analysis)
+- Embedded Systems (الأنظمة المدمجة — Arduino, Microcontrollers, ADC, DAC, Sensors, Timers, Interrupts, PWM)
+- Mobile App Development (تطبيقات الهاتف — Flutter, Dart, Widgets, State Management, Firebase)
+- Network Programming (برمجة الشبكات — TCP/IP, UDP, Sockets, Java Networking, Client-Server, Multithreading)
+- Software Engineering (هندسة البرمجيات — SDLC, Agile, UML Diagrams, Design Patterns, Testing, Requirements)
+
+قواعد مهمة:
+1. أجب بلغة الطالب (عربي أو إنجليزي).
+2. كن دقيقاً ومفيداً في إجاباتك.
+3. استخدم تنسيق Markdown لتنسيق إجابتك (عناوين، نقاط، كود، إلخ).
+4. عند الإجابة عن أسئلة أكاديمية، قدم شرحاً واضحاً مع أمثلة عملية.
+5. إذا كان السؤال يتعلق بكود برمجي، اكتب الكود مع شرح تفصيلي.
+''';
 
   @override
-  Future<String> sendMessage(String userMessage, {List<ChatAttachment>? attachments}) async {
+  Future<String> sendMessage(String userMessage, {List<ChatAttachment>? attachments, String? model}) async {
+    final activeModelName = model ?? 'gemini-2.5-flash';
+    
+    final generativeModel = GenerativeModel(
+      model: activeModelName,
+      apiKey: _apiKey,
+      systemInstruction: Content.text(_systemInstruction),
+    );
+
     List<Part> parts = [TextPart(userMessage)];
 
     if (attachments != null && attachments.isNotEmpty) {
@@ -36,7 +63,7 @@ class GeminiDataSource implements ChatDataSource {
     }
 
     final content = [Content.multi(parts)];
-    final response = await _model.generateContent(content);
+    final response = await generativeModel.generateContent(content);
     return response.text ?? 'لم أتمكن من الإجابة، حاول مرة أخرى.';
   }
 
@@ -47,4 +74,3 @@ class GeminiDataSource implements ChatDataSource {
     return await file.readAsBytes();
   }
 }
-

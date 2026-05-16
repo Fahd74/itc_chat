@@ -2,21 +2,25 @@ import 'package:flutter/material.dart';
 import 'package:itc_chat/features/auth/ui/screens/signup_screen.dart';
 
 // --- دالة لبناء الأزرار (Reusable Component) ---
-  Widget buildButton({required String text, required Color bgColor, required VoidCallback onPressed}) {
-    return SizedBox(
-      width: double.infinity,
-      height: 55,
-      child: ElevatedButton(
-        style: ElevatedButton.styleFrom(
-          backgroundColor: bgColor,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
-          elevation: 0,
-        ),
-        onPressed: onPressed,
-        child: Text(text, style: const TextStyle(color: Colors.white, fontSize: 17)),
+Widget buildButton({
+  required String text,
+  required Color bgColor,
+  required VoidCallback onPressed,
+}) {
+  return SizedBox(
+    width: double.infinity,
+    height: 55,
+    child: ElevatedButton(
+      style: ElevatedButton.styleFrom(
+        backgroundColor: bgColor,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
+        elevation: 0,
       ),
-    );
-  }
+      onPressed: onPressed,
+      child: Text(text, style: const TextStyle(color: Colors.white, fontSize: 17)),
+    ),
+  );
+}
 
 // Widget buildWelcomeTitle() {
 //     return RichText(
@@ -30,103 +34,111 @@ import 'package:itc_chat/features/auth/ui/screens/signup_screen.dart';
 //     );
 //   }
 
-  Widget buildInputField({required String label, required String hint, bool isPassword = false}) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(label, style: const TextStyle(color: Color(0xFF00BFA5), fontWeight: FontWeight.bold)),
-        const SizedBox(height: 10),
-        TextField(
-          obscureText: isPassword,
-          decoration: InputDecoration(
-            hintText: hint,
-            hintStyle: const TextStyle(color: Colors.white24),
-            filled: true,
-            fillColor: Colors.white.withOpacity(0.05),
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(15),
-              borderSide: const BorderSide(color: Color(0xFF004D40)),
-            ),
+Widget buildInputField({
+  required String label,
+  required String hint,
+  bool isPassword = false,
+}) {
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Text(
+        label,
+        style: const TextStyle(color: Color(0xFF00BFA5), fontWeight: FontWeight.bold),
+      ),
+      const SizedBox(height: 10),
+      TextField(
+        obscureText: isPassword,
+        decoration: InputDecoration(
+          hintText: hint,
+          hintStyle: const TextStyle(color: Colors.white24),
+          filled: true,
+          fillColor: Colors.white.withOpacity(0.05),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(15),
+            borderSide: const BorderSide(color: Color(0xFF004D40)),
           ),
         ),
-      ],
-    );
-  }
-
-  Widget buildPrimaryButton({required String text}) {
-    return SizedBox(
-      width: double.infinity,
-      height: 55,
-      child: ElevatedButton(
-        style: ElevatedButton.styleFrom(
-          backgroundColor: const Color(0xFF00796B),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-        ),
-        onPressed: () {},
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(text, style: const TextStyle(color: Colors.white, fontSize: 18)),
-            const SizedBox(width: 10),
-            const Icon(Icons.arrow_forward, color: Colors.white),
-          ],
-        ),
       ),
-    );
-  }
+    ],
+  );
+}
 
-  Widget buildDivider() {
-    return const Row(
-      children: [
-        Expanded(child: Divider(color: Color(0xFF004D40))),
-        Padding(padding: EdgeInsets.symmetric(horizontal: 10), child: Text("Or Continue With")),
-        Expanded(child: Divider(color: Color(0xFF004D40))),
-      ],
-    );
-  }
+Widget buildPrimaryButton({required String text}) {
+  return SizedBox(
+    width: double.infinity,
+    height: 55,
+    child: ElevatedButton(
+      style: ElevatedButton.styleFrom(
+        backgroundColor: const Color(0xFF00796B),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+      ),
+      onPressed: () {},
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(text, style: const TextStyle(color: Colors.white, fontSize: 18)),
+          const SizedBox(width: 10),
+          const Icon(Icons.arrow_forward, color: Colors.white),
+        ],
+      ),
+    ),
+  );
+}
 
-  Widget buildSocialButtons() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        socialIcon(),
-        const SizedBox(width: 20),
-        socialIcon(),
-      ],
-    );
-  }
+Widget buildDivider() {
+  return const Row(
+    children: [
+      Expanded(child: Divider(color: Color(0xFF004D40))),
+      Padding(padding: EdgeInsets.symmetric(horizontal: 10), child: Text("Or Continue With")),
+      Expanded(child: Divider(color: Color(0xFF004D40))),
+    ],
+  );
+}
 
-  Widget socialIcon() {
-    return Container(
-      width: 60, height: 60,
-      decoration: BoxDecoration(color: Colors.white10, borderRadius: BorderRadius.circular(15)),
-    );
-  }
+Widget buildSocialButtons() {
+  return Row(
+    mainAxisAlignment: MainAxisAlignment.center,
+    children: [socialIcon(), const SizedBox(width: 20), socialIcon()],
+  );
+}
 
-  // Widget buildSignUpPrompt() {
-  //   return Center(
-  //     child: RichText(
-  //       text: const TextSpan(
-  //         text: "Don't Have An Account? ",
-  //         children: [
-  //           TextSpan(text: "Sign Up", style: TextStyle(color: Color(0xFF00BFA5), fontWeight: FontWeight.bold)),
-  //         ],
-  //       ),
-  //     ),
-  //   );
-  // }
+Widget socialIcon() {
+  return Container(
+    width: 60,
+    height: 60,
+    decoration: BoxDecoration(color: Colors.white10, borderRadius: BorderRadius.circular(15)),
+  );
+}
+
+// Widget buildSignUpPrompt() {
+//   return Center(
+//     child: RichText(
+//       text: const TextSpan(
+//         text: "Don't Have An Account? ",
+//         children: [
+//           TextSpan(text: "Sign Up", style: TextStyle(color: Color(0xFF00BFA5), fontWeight: FontWeight.bold)),
+//         ],
+//       ),
+//     ),
+//   );
+// }
 
 // زر الرجوع المشترك
 Widget buildBackButton(BuildContext context) {
   return Container(
-    decoration: BoxDecoration(color: const Color(0xFF1E272E), borderRadius: BorderRadius.circular(10)),
+    decoration: BoxDecoration(
+      color: Theme.of(context).colorScheme.surfaceContainerHighest,
+      borderRadius: BorderRadius.circular(10),
+    ),
     child: IconButton(
-      icon: const Icon(Icons.arrow_back, color: Colors.white, size: 20),
+      icon: Icon(Icons.arrow_back, color: Theme.of(context).colorScheme.onSurface, size: 20),
       onPressed: () {
         // العودة للشاشة السابقة إذا وجدت (Navigation Logic)
         if (Navigator.canPop(context)) Navigator.pop(context);
       },
-    ),);
+    ),
+  );
 }
 
 // نص "Sign Up" في أسفل شاشة الـ Login
@@ -138,11 +150,17 @@ Widget buildSignUpPrompt(BuildContext context) {
         Navigator.push(context, MaterialPageRoute(builder: (context) => const SignupScreen()));
       },
       child: RichText(
-        text: const TextSpan(
+        text: TextSpan(
           text: 'Don’t Have An Account ? ',
-          style: TextStyle(color: Colors.white, fontSize: 13),
+          style: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontSize: 13),
           children: [
-            TextSpan(text: 'Sign Up', style: TextStyle(color: Color(0xFF00BFA5), fontWeight: FontWeight.bold)),
+            TextSpan(
+              text: 'Sign Up',
+              style: TextStyle(
+                color: Theme.of(context).primaryColor,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
           ],
         ),
       ),
@@ -160,16 +178,20 @@ class OtpInputBox extends StatelessWidget {
       width: 60,
       height: 60,
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.05),
+        color: Theme.of(context).colorScheme.surfaceContainerHighest,
         borderRadius: BorderRadius.circular(15),
-        border: Border.all(color: const Color(0xFF004D40)),
+        border: Border.all(color: Theme.of(context).colorScheme.outline),
       ),
-      child: const TextField(
+      child: TextField(
         textAlign: TextAlign.center,
         keyboardType: TextInputType.number,
         maxLength: 1, // رقم واحد فقط
-        style: TextStyle(color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold),
-        decoration: InputDecoration(
+        style: TextStyle(
+          color: Theme.of(context).colorScheme.onSurface,
+          fontSize: 24,
+          fontWeight: FontWeight.bold,
+        ),
+        decoration: const InputDecoration(
           border: InputBorder.none, // إزالة الحدود الافتراضية للـ TextField
           counterText: '', // إخفاء عداد الحروف
         ),
@@ -179,17 +201,23 @@ class OtpInputBox extends StatelessWidget {
 }
 
 // عنوان "Welcome Back" المدمج
-Widget buildWelcomeTitle() {
+Widget buildWelcomeTitle(BuildContext context) {
   return Center(
     child: RichText(
-      text: const TextSpan(
+      text: TextSpan(
         text: 'Welcome ',
-        style: TextStyle(color: Color(0xFF00BFA5), fontSize: 28, fontWeight: FontWeight.bold),
+        style: TextStyle(
+          color: Theme.of(context).primaryColor,
+          fontSize: 28,
+          fontWeight: FontWeight.bold,
+        ),
         children: [
-          TextSpan(text: 'Back', style: TextStyle(color: Colors.white)),
+          TextSpan(
+            text: 'Back',
+            style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
+          ),
         ],
       ),
     ),
   );
 }
-
